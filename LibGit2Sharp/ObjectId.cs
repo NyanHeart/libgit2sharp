@@ -37,7 +37,7 @@ namespace LibGit2Sharp
         /// <param name="oid">The oid.</param>
         internal ObjectId(GitOid oid)
         {
-            if (oid.Id == null || oid.Id.Length != rawSize)
+            if (oid.Id.Length != rawSize)
             {
                 throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "A non null array of {0} bytes is expected.", rawSize), nameof(oid));
             }

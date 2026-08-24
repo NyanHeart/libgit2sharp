@@ -1,18 +1,40 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace LibGit2Sharp.Core
 {
+    [CustomMarshaller(typeof(FilePath), MarshalMode.ManagedToUnmanagedIn, typeof(StrictFilePathMarshaller))]
+    internal static unsafe class StrictFilePathMarshaller
+    {
+        public static byte* ConvertToUnmanaged(FilePath managed)
+        {
+            return (byte*)StrictFilePathMarshaler.FromManaged(managed);
+        }
+
+        public static void Free(byte* unmanaged)
+        {
+            EncodingMarshaler.Cleanup((IntPtr)unmanaged);
+        }
+    }
+
+    [CustomMarshaller(typeof(FilePath), MarshalMode.ManagedToUnmanagedOut, typeof(LaxFilePathNoCleanupMarshaller))]
+    internal static unsafe class LaxFilePathNoCleanupMarshaller
+    {
+        public static FilePath ConvertToManaged(byte* unmanaged)
+        {
+            return LaxFilePathMarshaler.FromNative((IntPtr)unmanaged);
+        }
+    }
+
     /// <summary>
     /// This marshaler is to be used for capturing a UTF-8 string owned by libgit2 and
     /// converting it to a managed FilePath instance. The marshaler will not attempt to
     /// free the native pointer after conversion, because the memory is owned by libgit2.
     ///
     /// Use this marshaler for return values, for example:
-    /// [return: MarshalAs(UnmanagedType.CustomMarshaler,
-    ///                    MarshalCookie = UniqueId.UniqueIdentifier,
-    ///                    MarshalTypeRef = typeof(LaxFilePathNoCleanupMarshaler))]
+    /// [return: MarshalUsing(typeof(LaxFilePathNoCleanupMarshaller))]
     /// </summary>
     internal class LaxFilePathNoCleanupMarshaler : LaxFilePathMarshaler
     {
@@ -40,11 +62,9 @@ namespace LibGit2Sharp.Core
     /// native buffer is freed.
     ///
     /// Use this marshaler for function parameters, for example:
-    /// [DllImport(libgit2)]
-    /// internal static extern int git_index_open(out IndexSafeHandle index,
-    ///     [MarshalAs(UnmanagedType.CustomMarshaler,
-    ///                MarshalCookie = UniqueId.UniqueIdentifier,
-    ///                MarshalTypeRef = typeof(StrictFilePathMarshaler))] FilePath indexpath);
+    /// [LibraryImport(libgit2)]
+    /// internal static partial int git_index_open(out IndexSafeHandle index,
+    ///     [MarshalUsing(typeof(StrictFilePathMarshaller))] FilePath indexpath);
     /// </summary>
     internal class StrictFilePathMarshaler : StrictUtf8Marshaler
     {

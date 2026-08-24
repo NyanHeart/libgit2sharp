@@ -11,9 +11,7 @@ namespace LibGit2Sharp.Core
     /// free the native pointer after conversion, because the memory is owned by libgit2.
     ///
     /// Use this marshaler for return values, for example:
-    /// [return: MarshalAs(UnmanagedType.CustomMarshaler,
-    ///                    MarshalCookie = UniqueId.UniqueIdentifier,
-    ///                    MarshalTypeRef = typeof(LaxUtf8NoCleanupMarshaler))]
+    /// [return: MarshalUsing(typeof(LaxUtf8NoCleanupMarshaller))]
     /// </summary>
     internal class LaxUtf8NoCleanupMarshaler : LaxUtf8Marshaler
     {
@@ -40,11 +38,9 @@ namespace LibGit2Sharp.Core
     /// native buffer is freed.
     ///
     /// Use this marshaler for function parameters, for example:
-    /// [DllImport(libgit2)]
-    /// internal static extern int git_tag_delete(RepositorySafeHandle repo,
-    ///     [MarshalAs(UnmanagedType.CustomMarshaler
-    ///                MarshalCookie = UniqueId.UniqueIdentifier,
-    ///                MarshalTypeRef = typeof(StrictUtf8Marshaler))] String tagName);
+    /// [LibraryImport(libgit2)]
+    /// internal static partial int git_tag_delete(RepositorySafeHandle repo,
+    ///     [MarshalUsing(typeof(StrictUtf8Marshaller))] String tagName);
     /// </summary>
     internal class StrictUtf8Marshaler : EncodingMarshaler
     {

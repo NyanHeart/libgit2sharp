@@ -1,4 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace LibGit2Sharp.Core
 {
@@ -6,6 +8,48 @@ namespace LibGit2Sharp.Core
     {
         public const int Size = 20;
         public unsafe fixed byte Id[20];
+    }
+
+    [InlineArray(20)]
+    internal struct InlineArray20<T>
+    {
+        private T elem;
+
+        public int Length => 20;
+
+        public static implicit operator T[](InlineArray20<T> value)
+        {
+            var result = new T[20];
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = value[i];
+            }
+
+            return result;
+        }
+
+        public static implicit operator InlineArray20<T>(T[] value)
+        {
+            var result = new InlineArray20<T>();
+
+            if (value is null)
+            {
+                return result;
+            }
+
+            if (value.Length != 20)
+            {
+                throw new ArgumentException("An array of 20 elements is required.", nameof(value));
+            }
+
+            for (int i = 0; i < value.Length; i++)
+            {
+                result[i] = value[i];
+            }
+
+            return result;
+        }
     }
 
     /// <summary>
@@ -21,8 +65,7 @@ namespace LibGit2Sharp.Core
         /// <summary>
         /// The raw binary 20 byte Id.
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Size)]
-        public byte[] Id;
+        public InlineArray20<byte> Id;
 
         public static implicit operator ObjectId(GitOid oid)
         {

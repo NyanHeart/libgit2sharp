@@ -26,7 +26,7 @@ namespace LibGit2Sharp
             int len = checked((int)cert->len.ToUInt32());
             byte[] data = new byte[len];
             Marshal.Copy(new IntPtr(cert->data), data, 0, len);
-            Certificate = new X509Certificate(data);
+            Certificate = X509CertificateLoader.LoadCertificate(data);
         }
 
         internal CertificateX509(X509Certificate cert)

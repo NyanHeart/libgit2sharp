@@ -226,14 +226,14 @@ namespace LibGit2Sharp.Core
         {
             using (var osw = new ObjectSafeWrapper(treeId, repo))
             {
-                int res = NativeMethods.git_checkout_tree(repo, osw.ObjectPtr, ref opts);
+                int res = NativeMethods.git_checkout_tree(repo, osw.ObjectPtr, opts);
                 Ensure.ZeroResult(res);
             }
         }
 
         public static unsafe void git_checkout_index(RepositoryHandle repo, ObjectHandle treeish, ref GitCheckoutOpts opts)
         {
-            int res = NativeMethods.git_checkout_index(repo, treeish, ref opts);
+            int res = NativeMethods.git_checkout_index(repo, treeish, opts);
             Ensure.ZeroResult(res);
         }
 
@@ -253,7 +253,7 @@ namespace LibGit2Sharp.Core
         internal static unsafe IndexHandle git_cherrypick_commit(RepositoryHandle repo, ObjectHandle cherrypickCommit, ObjectHandle ourCommit, uint mainline, GitMergeOpts opts, out bool earlyStop)
         {
             git_index* index;
-            int res = NativeMethods.git_cherrypick_commit(out index, repo, cherrypickCommit, ourCommit, mainline, ref opts);
+            int res = NativeMethods.git_cherrypick_commit(out index, repo, cherrypickCommit, ourCommit, mainline, opts);
             if (res == (int)GitErrorCode.MergeConflict)
             {
                 earlyStop = true;
@@ -275,7 +275,7 @@ namespace LibGit2Sharp.Core
             ref GitCloneOptions opts)
         {
             git_repository* repo;
-            int res = NativeMethods.git_clone(out repo, url, workdir, ref opts);
+            int res = NativeMethods.git_clone(out repo, url, workdir, opts);
             Ensure.ZeroResult(res);
             return new RepositoryHandle(repo, true);
         }
@@ -701,7 +701,7 @@ namespace LibGit2Sharp.Core
                 try
                 {
                     git_describe_result* result;
-                    int res = NativeMethods.git_describe_commit(out result, osw.ObjectPtr, ref opts);
+                    int res = NativeMethods.git_describe_commit(out result, osw.ObjectPtr, opts);
                     Ensure.ZeroResult(res);
                     describeHandle = new DescribeResultHandle(result, true);
 
@@ -714,7 +714,7 @@ namespace LibGit2Sharp.Core
                             AlwaysUseLongFormat = options.AlwaysRenderLongFormat,
                         };
 
-                        res = NativeMethods.git_describe_format(buf, describeHandle, ref formatOptions);
+                        res = NativeMethods.git_describe_format(buf, describeHandle, formatOptions);
                         Ensure.ZeroResult(res);
 
                         describeHandle.Dispose();
@@ -1207,7 +1207,7 @@ namespace LibGit2Sharp.Core
         public static unsafe IndexHandle git_merge_commits(RepositoryHandle repo, ObjectHandle ourCommit, ObjectHandle theirCommit, GitMergeOpts opts, out bool earlyStop)
         {
             git_index* index;
-            int res = NativeMethods.git_merge_commits(out index, repo, ourCommit, theirCommit, ref opts);
+            int res = NativeMethods.git_merge_commits(out index, repo, ourCommit, theirCommit, opts);
             if (res == (int)GitErrorCode.MergeConflict)
             {
                 earlyStop = true;
@@ -1307,8 +1307,8 @@ namespace LibGit2Sharp.Core
             int res = NativeMethods.git_merge(repo,
                                               their_heads,
                                               (UIntPtr)their_heads.Length,
-                                              ref mergeOptions,
-                                              ref checkoutOptions);
+                                              mergeOptions,
+                                              checkoutOptions);
 
             if (res == (int)GitErrorCode.MergeConflict)
             {
@@ -2169,7 +2169,7 @@ namespace LibGit2Sharp.Core
 
             try
             {
-                int res = NativeMethods.git_remote_connect(remote, direction, ref remoteCallbacks, ref proxyOptions, ref customHeaders.Array);
+                int res = NativeMethods.git_remote_connect(remote, direction, remoteCallbacks, proxyOptions, ref customHeaders.Array);
                 Ensure.ZeroResult(res);
             }
             catch (Exception)
@@ -2664,7 +2664,7 @@ namespace LibGit2Sharp.Core
         {
             using (var osw = new ObjectSafeWrapper(committishId, repo))
             {
-                int res = NativeMethods.git_reset(repo, osw.ObjectPtr, resetKind, ref checkoutOptions);
+                int res = NativeMethods.git_reset(repo, osw.ObjectPtr, resetKind, checkoutOptions);
                 Ensure.ZeroResult(res);
             }
         }
@@ -2688,7 +2688,7 @@ namespace LibGit2Sharp.Core
         internal static unsafe IndexHandle git_revert_commit(RepositoryHandle repo, ObjectHandle revertCommit, ObjectHandle ourCommit, uint mainline, GitMergeOpts opts, out bool earlyStop)
         {
             git_index* index;
-            int res = NativeMethods.git_revert_commit(out index, repo, revertCommit, ourCommit, mainline, ref opts);
+            int res = NativeMethods.git_revert_commit(out index, repo, revertCommit, ourCommit, mainline, opts);
             if (res == (int)GitErrorCode.MergeConflict)
             {
                 earlyStop = true;
@@ -3010,7 +3010,7 @@ namespace LibGit2Sharp.Core
 
         public static unsafe void git_submodule_update(SubmoduleHandle submodule, bool init, ref GitSubmoduleUpdateOptions options)
         {
-            var res = NativeMethods.git_submodule_update(submodule, init, ref options);
+            var res = NativeMethods.git_submodule_update(submodule, init, options);
             Ensure.ZeroResult(res);
         }
 

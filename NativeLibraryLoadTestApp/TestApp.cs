@@ -1,19 +1,18 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace LibGit2Sharp.Tests
 {
-    public class TestApp
+    public partial class TestApp
     {
-        [DllImport("kernel32")]
-        private static extern IntPtr GetModuleHandle(string path);
+        [LibraryImport("kernel32", EntryPoint = "GetModuleHandleW", StringMarshalling = StringMarshalling.Utf16)]
+        private static partial IntPtr GetModuleHandle(string path);
 
-        [DllImport("kernel32")]
-        private static extern int GetModuleFileName(IntPtr handle, [Out] StringBuilder path, int size);
+        [LibraryImport("kernel32", EntryPoint = "GetModuleFileNameW")]
+        private static unsafe partial int GetModuleFileName(IntPtr handle, char* path, int size);
 
-        static int Main(string[] args)
+        static unsafe int Main(string[] args)
         {
             if (args.Length < 1 || args.Length > 2)
             {
@@ -30,9 +29,15 @@ namespace LibGit2Sharp.Tests
 
             var capacity = ushort.MaxValue;
             var moduleHandle = GetModuleHandle(moduleName);
-            var buffer = new StringBuilder(capacity);
-            int actualLength = GetModuleFileName(moduleHandle, buffer, capacity);
-            var actualPath = buffer.ToString(0, actualLength);
+            var buffer = new char[capacity];
+            int actualLength;
+
+            fixed (char* path = buffer)
+            {
+                actualLength = GetModuleFileName(moduleHandle, path, capacity);
+            }
+
+            var actualPath = new string(buffer, 0, actualLength);
 
             if (expectedPath != actualPath)
             {
