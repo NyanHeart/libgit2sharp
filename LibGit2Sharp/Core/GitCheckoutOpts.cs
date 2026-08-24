@@ -7,14 +7,14 @@ namespace LibGit2Sharp.Core
     internal enum CheckoutStrategy
     {
         /// <summary>
-        /// Default is a dry run, no actual updates.
+        /// Allow safe updates that cannot overwrite uncommitted data.
         /// </summary>
-        GIT_CHECKOUT_NONE = 0,
+        GIT_CHECKOUT_SAFE = 0,
 
         /// <summary>
-        /// Allow safe updates that cannot overwrite uncommited data.
+        /// Do not perform a checkout or invoke callbacks.
         /// </summary>
-        GIT_CHECKOUT_SAFE = (1 << 0),
+        GIT_CHECKOUT_NONE = (1 << 30),
 
         /// <summary>
         /// Allow update of entries in working dir that are modified from HEAD.
@@ -104,6 +104,16 @@ namespace LibGit2Sharp.Core
         /// Normally checkout writes the index upon completion; this prevents that.
         /// </summary>
         GIT_CHECKOUT_DONT_WRITE_INDEX = (1 << 23),
+
+        /// <summary>
+        /// Report what would be done without modifying the worktree or index.
+        /// </summary>
+        GIT_CHECKOUT_DRY_RUN = (1 << 24),
+
+        /// <summary>
+        /// Include common ancestor data in zdiff3 format for conflicts.
+        /// </summary>
+        GIT_CHECKOUT_CONFLICT_STYLE_ZDIFF3 = (1 << 25),
 
         // THE FOLLOWING OPTIONS ARE NOT YET IMPLEMENTED
 

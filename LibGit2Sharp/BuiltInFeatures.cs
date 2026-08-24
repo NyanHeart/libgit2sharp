@@ -35,5 +35,45 @@ namespace LibGit2Sharp
         /// is compiled into libgit2.
         /// </summary>
         NSec = (1 << 3),
+
+        /// <summary>
+        /// Support for HTTP parsing is compiled into libgit2.
+        /// </summary>
+        HttpParser = (1 << 4),
+
+        /// <summary>
+        /// Support for regular expressions is compiled into libgit2.
+        /// </summary>
+        Regex = (1 << 5),
+
+        /// <summary>
+        /// Support for internationalized messages is compiled into libgit2.
+        /// </summary>
+        I18N = (1 << 6),
+
+        /// <summary>
+        /// Support for NTLM authentication is compiled into libgit2.
+        /// </summary>
+        AuthNtlm = (1 << 7),
+
+        /// <summary>
+        /// Support for Negotiate authentication is compiled into libgit2.
+        /// </summary>
+        AuthNegotiate = (1 << 8),
+
+        /// <summary>
+        /// Support for compression is compiled into libgit2.
+        /// </summary>
+        Compression = (1 << 9),
+
+        /// <summary>
+        /// Support for SHA-1 object identifiers is compiled into libgit2.
+        /// </summary>
+        Sha1 = (1 << 10),
+
+        /// <summary>
+        /// Support for SHA-256 object identifiers is compiled into libgit2.
+        /// </summary>
+        Sha256 = (1 << 11),
     }
 }

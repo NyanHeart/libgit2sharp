@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 namespace LibGit2Sharp.Core
@@ -230,6 +230,7 @@ namespace LibGit2Sharp.Core
 
         public uint ContextLines;
         public uint InterhunkLines;
+        public int OidType;
         public ushort IdAbbrev;
         public long MaxSize;
         public IntPtr OldPrefixString;

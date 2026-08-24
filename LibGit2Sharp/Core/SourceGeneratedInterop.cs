@@ -79,7 +79,7 @@ namespace LibGit2Sharp.Core
         }
     }
 
-    internal static class StructMarshaller
+    internal static unsafe class StructMarshaller
     {
         public static IntPtr ConvertToUnmanaged<T>(T managed)
         {
@@ -88,7 +88,9 @@ namespace LibGit2Sharp.Core
                 return IntPtr.Zero;
             }
 
-            IntPtr unmanaged = Marshal.AllocHGlobal(Marshal.SizeOf<T>());
+            int size = Marshal.SizeOf<T>();
+            IntPtr unmanaged = Marshal.AllocHGlobal(size);
+            new Span<byte>((void*)unmanaged, size).Clear();
 
             try
             {

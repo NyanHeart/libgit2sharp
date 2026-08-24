@@ -38,5 +38,10 @@ namespace LibGit2Sharp.Core
         internal IntPtr payload;
 
         internal NativeMethods.url_resolve_callback resolve_url;
+
+        // Added in libgit2 1.9. Keep this slot even while using the legacy
+        // update_tips callback above so nested option structures retain the
+        // native git_remote_callbacks size and alignment.
+        private IntPtr update_refs;
     }
 }
