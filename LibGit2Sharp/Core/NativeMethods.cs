@@ -1004,7 +1004,7 @@ namespace LibGit2Sharp.Core
             out GitMergePreference preference_out,
             git_repository* repo,
             [In] IntPtr[] their_heads,
-            int their_heads_len);
+            nuint their_heads_len);
 
         [LibraryImport(libgit2), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
         internal static unsafe partial void git_annotated_commit_free(git_annotated_commit* commit);

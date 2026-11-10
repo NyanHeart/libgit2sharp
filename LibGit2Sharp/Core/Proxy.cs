@@ -1333,7 +1333,7 @@ namespace LibGit2Sharp.Core
                                                        out preference_out,
                                                        repo,
                                                        their_heads,
-                                                       their_heads.Length);
+                                                       (nuint)their_heads.Length);
 
             Ensure.ZeroResult(res);
         }
